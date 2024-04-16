@@ -1,0 +1,8 @@
+db:
+  type: oracle
+  host: 10.252.79.25
+  port: 1521
+  schema: ORCLPDB1
+  username: EOLANE_MOM_YUJIE
+  password: EOLANE_MOM_YUJIE
+

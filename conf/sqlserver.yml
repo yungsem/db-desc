@@ -1,0 +1,7 @@
+db:
+  type: sqlserver
+  host: 192.168.80.92
+  port: 1433
+  schema: wms
+  username: sa
+  password: mJwms#2022
