@@ -13,48 +13,48 @@ type Oracle struct {
 func (r *Oracle) listAllTable() ([]TableInfo, error) {
 	sql := `
 		SELECT 
-			table_name,
-			comments
+			table_name AS TABLE_NAME,
+			comments AS TABLE_COMMENT
 		FROM 
 			user_tab_comments
 		WHERE 
-			table_type = 'TABLE' -- 仅选择表
-			AND table_name NOT LIKE 'BIN$%' -- 排除回收站中的表
-			AND table_name NOT LIKE 'APEX%' -- 排除 Oracle Application Express 表
-			AND table_name NOT LIKE 'MLOG$%' -- 排除物化视图日志表
-			AND table_name NOT LIKE 'RUPD$%' -- 排除物化视图日志表
-			AND table_name NOT LIKE 'RIMP$%' -- 排除物化视图日志表
-			AND table_name NOT LIKE 'REDO%' -- 排除重做日志表
-			AND table_name NOT LIKE 'C_OBJ#%' -- 排除系统表
-			AND table_name NOT LIKE 'OBJ$%' -- 排除系统表
-			AND table_name NOT LIKE 'COL$%' -- 排除系统表
-			AND table_name NOT LIKE 'CON$%' -- 排除系统表
-			AND table_name NOT LIKE 'DF%' -- 排除系统表
-			AND table_name NOT LIKE 'ICOL$%' -- 排除系统表
-			AND table_name NOT LIKE 'I_OBJ#%' -- 排除系统表
-			AND table_name NOT LIKE 'I_USER#%' -- 排除系统表
-			AND table_name NOT LIKE 'TRIGGER$%' -- 排除系统表
-			AND table_name NOT LIKE 'LOB$%' -- 排除系统表
-			AND table_name NOT LIKE 'NEVER%' -- 排除系统表
-			AND table_name NOT LIKE 'RECYCLEBIN%' -- 排除回收站表
-			AND table_name NOT LIKE 'RM_$%' -- 排除系统表
-			AND table_name NOT LIKE 'DBMS%' -- 排除系统表
-			AND table_name NOT LIKE 'PLAN_TABLE' -- 排除系统表
-			AND table_name NOT LIKE 'ORA$%' -- 排除系统表
-			AND table_name NOT LIKE 'TAB$%' -- 排除系统表
-			AND table_name NOT LIKE 'USER$%' -- 排除系统表
-			AND table_name NOT LIKE 'TMP$%' -- 排除临时表
-			AND table_name NOT LIKE 'XDS%' -- 排除系统表
-			AND table_name NOT LIKE 'XS%' -- 排除系统表
-			AND table_name NOT LIKE 'WRI$_%' -- 排除系统表
-			AND table_name NOT LIKE 'WRH$_%' -- 排除系统表
-			AND table_name NOT LIKE 'AWR%' -- 排除系统表
-			AND table_name NOT LIKE 'SQLPLUS%' -- 排除系统表
-			AND table_name NOT LIKE 'DBA%' -- 排除系统表
-			AND table_name NOT LIKE 'DUAL' -- 排除系统表
-			AND table_name NOT LIKE 'DUMMY' -- 排除系统表
+			table_type = 'TABLE'
+			AND table_name NOT LIKE 'BIN$%'
+			AND table_name NOT LIKE 'APEX%'
+			AND table_name NOT LIKE 'MLOG$%'
+			AND table_name NOT LIKE 'RUPD$%'
+			AND table_name NOT LIKE 'RIMP$%'
+			AND table_name NOT LIKE 'REDO%'
+			AND table_name NOT LIKE 'C_OBJ#%'
+			AND table_name NOT LIKE 'OBJ$%'
+			AND table_name NOT LIKE 'COL$%'
+			AND table_name NOT LIKE 'CON$%'
+			AND table_name NOT LIKE 'DF%'
+			AND table_name NOT LIKE 'ICOL$%'
+			AND table_name NOT LIKE 'I_OBJ#%'
+			AND table_name NOT LIKE 'I_USER#%'
+			AND table_name NOT LIKE 'TRIGGER$%'
+			AND table_name NOT LIKE 'LOB$%'
+			AND table_name NOT LIKE 'NEVER%'
+			AND table_name NOT LIKE 'RECYCLEBIN%'
+			AND table_name NOT LIKE 'RM_$%'
+			AND table_name NOT LIKE 'DBMS%'
+			AND table_name NOT LIKE 'PLAN_TABLE'
+			AND table_name NOT LIKE 'ORA$%'
+			AND table_name NOT LIKE 'TAB$%'
+			AND table_name NOT LIKE 'USER$%'
+			AND table_name NOT LIKE 'TMP$%'
+			AND table_name NOT LIKE 'XDS%'
+			AND table_name NOT LIKE 'XS%'
+			AND table_name NOT LIKE 'WRI$_%'
+			AND table_name NOT LIKE 'WRH$_%'
+			AND table_name NOT LIKE 'AWR%'
+			AND table_name NOT LIKE 'SQLPLUS%'
+			AND table_name NOT LIKE 'DBA%'
+			AND table_name NOT LIKE 'DUAL'
+			AND table_name NOT LIKE 'DUMMY'
 		ORDER BY 
-			table_name;
+			table_name
 	`
 
 	var tableInfos []TableInfo

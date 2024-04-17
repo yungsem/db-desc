@@ -2,7 +2,10 @@ package db
 
 import (
 	"fmt"
+	_ "github.com/denisenkom/go-mssqldb"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/sijms/go-ora/v2"
 	"net/url"
 )
 
@@ -33,14 +36,14 @@ func NewTableDescriber(dbType string, host string, port int,
 
 	switch dbType {
 	case TypeMysql:
-		return &Mysql{db}, nil
+		return &Mysql{schema , db, }, nil
 	case TypeSqlserver:
 		return &Sqlserver{db}, nil
 	case TypeOracle:
 		return &Oracle{db}, nil
 	default:
 
-		return &Mysql{db}, nil
+		return &Mysql{schema, db}, nil
 	}
 }
 

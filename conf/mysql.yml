@@ -2,7 +2,7 @@ db:
   type: mysql
   host: localhost
   port: 3306
-  schema: ami_mom_xiexin
+  schema: mom_mdm
   username: root
   password: root
 
