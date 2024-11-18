@@ -1,17 +1,11 @@
-package db
+package schema
 
 import (
-	"github.com/jmoiron/sqlx"
+	"github.com/yungsem/db-desc/database"
 )
 
-// Oracle 表示 oracle 数据库
-type Oracle struct {
-	db *sqlx.DB
-}
-
-// listAllTable 返回 db 中用户空间所有的表
-func (r *Oracle) listAllTable() ([]TableInfo, error) {
-	sql := `
+const (
+	listTableSqlOracle = `
 		SELECT 
 			table_name AS TABLE_NAME,
 			comments AS TABLE_COMMENT
@@ -57,19 +51,7 @@ func (r *Oracle) listAllTable() ([]TableInfo, error) {
 			table_name
 	`
 
-	var tableInfos []TableInfo
-
-	err := r.db.Select(&tableInfos, sql)
-	if err != nil {
-		return nil, err
-	}
-
-	return tableInfos, nil
-}
-
-// listAllColumn 返回 db 中用户空间所有表的所有列
-func (r *Oracle) listAllColumn() ([]ColumnInfo, error) {
-	sql := `
+	listColumnSqlOracle = `
 		SELECT 
 			tc.TABLE_NAME AS TABLE_NAME, 
 			tc.COLUMN_NAME AS NAME, 
@@ -86,28 +68,30 @@ func (r *Oracle) listAllColumn() ([]ColumnInfo, error) {
 		LEFT JOIN user_col_comments cc ON tc.TABLE_NAME = cc.TABLE_NAME AND tc.COLUMN_NAME = cc.COLUMN_NAME
 		ORDER BY tc.column_id
 	`
+)
 
-	var columnInfos []ColumnInfo
-
-	err := r.db.Select(&columnInfos, sql)
-	if err != nil {
-		return nil, err
-	}
-
-	return columnInfos, nil
+// Oracle 表示 oracle 数据库
+type Oracle struct {
+	Schema
 }
 
-// DescribeTable 实现了 Table 接口的 TableInfos 方法
-func (r *Oracle) DescribeTable() ([]TableInfo, error) {
-	tableInfos, err := r.listAllTable()
+// NewOracle 创建 oracle 实例
+func NewOracle(db *database.DB) (*Oracle, error) {
+	tableInfos, err := listAllTable(db.DB, db.SchemaName, listTableSqlOracle)
 	if err != nil {
 		return nil, err
 	}
 
-	columnInfos, err := r.listAllColumn()
+	columnInfos, err := listAllColumn(db.DB, db.SchemaName, listColumnSqlOracle)
 	if err != nil {
 		return nil, err
 	}
 
-	return makeTableInfo(tableInfos, columnInfos), nil
+	return &Oracle{
+		Schema: Schema{
+			db:          db,
+			tableInfos:  tableInfos,
+			columnInfos: columnInfos,
+		},
+	}, nil
 }

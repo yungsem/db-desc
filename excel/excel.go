@@ -2,11 +2,11 @@ package excel
 
 import (
 	"github.com/xuri/excelize/v2"
-	"github.com/yungsem/db-desc/db"
+	"github.com/yungsem/db-desc/schema"
 	"strconv"
 )
 
-func GenerateExcel(tableInfos []db.TableInfo) error {
+func GenerateExcel(tableInfos []schema.TableInfo) error {
 	f := excelize.NewFile()
 
 	sheet := "表结构说明"

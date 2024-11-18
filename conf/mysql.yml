@@ -1,8 +1,8 @@
 db:
   type: mysql
-  host: localhost
+  host: 101.35.235.214
   port: 3306
-  schema: mom_mdm
+  schema: mom_flow
   username: root
-  password: root
+  password: admin123456
 

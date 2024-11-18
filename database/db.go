@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"fmt"
@@ -22,33 +22,14 @@ const (
 	DNSOracle = "oracle://%s:%s@%s:%d/%s"
 )
 
-// NewTableDescriber 创建一个 TableDescriber
-// 如果 dbType = mysql ，返回的是 Mysql 实例
-// 如果 dbType = sqlserver ，返回的是 Sqlserver 实例
-// 如果 dbType = oracle ，返回的是 Oracle 实例
-// 默认返回 Mysql 实例
-func NewTableDescriber(dbType string, host string, port int,
-	username string, password string, schema string) (TableDescriber, error) {
-	db, err := newDB(dbType, host, port, username, password, schema)
-	if err != nil {
-		return nil, err
-	}
-
-	switch dbType {
-	case TypeMysql:
-		return &Mysql{schema , db, }, nil
-	case TypeSqlserver:
-		return &Sqlserver{db}, nil
-	case TypeOracle:
-		return &Oracle{db}, nil
-	default:
-
-		return &Mysql{schema, db}, nil
-	}
+type DB struct {
+	DBType     string
+	SchemaName string
+	DB         *sqlx.DB
 }
 
-// newDB 创建一个 *sqlx.DB 实例
-func newDB(dbType string, host string, port int, username string, password string, schema string) (*sqlx.DB, error) {
+// NewDB 创建一个 DB 实例
+func NewDB(dbType string, host string, port int, username string, password string, schema string) (*DB, error) {
 	var dnsF string
 	switch dbType {
 	case TypeMysql:
@@ -78,5 +59,9 @@ func newDB(dbType string, host string, port int, username string, password strin
 		return nil, err
 	}
 
-	return db, nil
+	return &DB{
+		DBType:     dbType,
+		SchemaName: schema,
+		DB:         db,
+	}, nil
 }

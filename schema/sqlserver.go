@@ -1,17 +1,11 @@
-package db
+package schema
 
 import (
-	"github.com/jmoiron/sqlx"
+	"github.com/yungsem/db-desc/database"
 )
 
-// Sqlserver 表示 Sqlserver 数据库
-type Sqlserver struct {
-	db *sqlx.DB
-}
-
-// listAllTable 返回 db 中用户空间所有的表
-func (r *Sqlserver) listAllTable() ([]TableInfo, error) {
-	sql := `
+const (
+	listTableSqlSqlserver = `
 		SELECT DISTINCT
 			d.name AS TABLE_NAME,
 			f.value AS TABLE_COMMENT 
@@ -27,20 +21,7 @@ func (r *Sqlserver) listAllTable() ([]TableInfo, error) {
 			LEFT JOIN sys.extended_properties f ON d.id= f.major_id 
 			AND f.minor_id= 0
 	`
-
-	var tableInfos []TableInfo
-
-	err := r.db.Select(&tableInfos, sql)
-	if err != nil {
-		return nil, err
-	}
-
-	return tableInfos, nil
-}
-
-// listAllColumn 返回 db 中用户空间所有表的所有列
-func (r *Sqlserver) listAllColumn() ([]ColumnInfo, error) {
-	sql := `
+	listColumnSqlSqlServer = `
 		SELECT 
 			t.name AS TABLE_NAME,
 			c.name AS NAME,
@@ -71,28 +52,30 @@ func (r *Sqlserver) listAllColumn() ([]ColumnInfo, error) {
 			TABLE_NAME,
 			c.column_id
 	`
+)
 
-	var columnInfos []ColumnInfo
-
-	err := r.db.Select(&columnInfos, sql)
-	if err != nil {
-		return nil, err
-	}
-
-	return columnInfos, nil
+// Sqlserver 表示 Sqlserver 数据库
+type Sqlserver struct {
+	Schema
 }
 
-// DescribeTable 实现了 Table 接口的 TableInfos 方法
-func (r *Sqlserver) DescribeTable() ([]TableInfo, error) {
-	tableInfos, err := r.listAllTable()
+// NewSqlserver 创建 sqlserver 实例
+func NewSqlserver(db *database.DB) (*Sqlserver, error) {
+	tableInfos, err := listAllTable(db.DB, db.SchemaName, listTableSqlSqlserver)
 	if err != nil {
 		return nil, err
 	}
 
-	columnInfos, err := r.listAllColumn()
+	columnInfos, err := listAllColumn(db.DB, db.SchemaName, listColumnSqlSqlServer)
 	if err != nil {
 		return nil, err
 	}
 
-	return makeTableInfo(tableInfos, columnInfos), nil
+	return &Sqlserver{
+		Schema: Schema{
+			db:          db,
+			tableInfos:  tableInfos,
+			columnInfos: columnInfos,
+		},
+	}, nil
 }
