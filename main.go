@@ -1,19 +1,29 @@
 package main
 
 import (
+	"github.com/donnie4w/go-logger/logger"
 	"github.com/yungsem/db-desc/cnf"
 	_ "github.com/yungsem/db-desc/cnf"
 	"github.com/yungsem/db-desc/database"
 	"github.com/yungsem/db-desc/excel"
 	"github.com/yungsem/db-desc/schema"
-	"log"
 )
 
 func main() {
+	// 初始化日志
+	log := logger.NewLogger()
+	log.SetFormat(
+		logger.FORMAT_LEVELFLAG |
+			logger.FORMAT_LONGFILENAME |
+			logger.FORMAT_MICROSECONDS |
+			logger.FORMAT_FUNC)
+	log.SetFormatter("{time} - {level} - {file} - {message} \n")
+	log.SetOption(&logger.Option{Console: true, Stacktrace: logger.LEVEL_WARN})
+
 	// 初始化配置
 	conf, err := cnf.NewConf()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Errorf("init conf error: %v", err)
 	}
 
 	// 初始化 DB
